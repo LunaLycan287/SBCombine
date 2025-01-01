@@ -10,10 +10,12 @@ Parser parser = new(with => {
     with.AutoVersion = false;
     with.CaseSensitive = false;
     with.EnableDashDash = true;
+    with.HelpWriter = Console.Out;
 });
 ParserResult<CmdOptions>? result = parser.ParseArguments<CmdOptions>(args);
 if (result.Errors.Any()) {
-    Console.Error.WriteLine("Could not parse commandline:" + Environment.NewLine + " " + string.Join(Environment.NewLine + " ", result.Errors));
+    if(!result.Errors.IsHelp())
+        Console.Error.WriteLine("Could not parse commandline:" + Environment.NewLine + " " + string.Join(Environment.NewLine + " ", result.Errors));
     return;
 }
 CmdOptions options = result.Value;
